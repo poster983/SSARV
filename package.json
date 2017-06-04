@@ -1,0 +1,26 @@
+{
+  "name": "ssarv",
+  "version": "1.0.0",
+  "description": "Stupidly Simple Account Role Verifier - Express middleware that checks if the user has the correct permission role. Edit",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/poster983/SSARV.git"
+  },
+  "keywords": [
+    "middleware",
+    "passport",
+    "permission",
+    "user",
+    "role"
+  ],
+  "author": "Joseph Hassell",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/poster983/SSARV/issues"
+  },
+  "homepage": "https://github.com/poster983/SSARV#readme"
+}
