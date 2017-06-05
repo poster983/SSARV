@@ -1,10 +1,32 @@
+/*
+The MIT License (MIT)
+
+Copyright (c) 2017 Joseph Hassell
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 var ssarv = require('../index.js');
 var httpMocks = require('node-mocks-http');
 var chai = require('chai');
 var assert = chai.assert;
 var req = {}; // define REQUEST
 var res = {};// define RESPONSE
-
 
 
 function handleError(done, fn) {
@@ -128,7 +150,7 @@ describe("User in the \"req\" object has a role value of: \"admin\".", function(
 	        user: {
 	        	name: "Tester",
 	        	perm: {
-	            	role: ["admin", "mod"]
+	            	role: "admin"
 	            }
 	        }
 	    });
@@ -151,9 +173,23 @@ describe("User in the \"req\" object has a role value of: \"admin\".", function(
 			})
 		})
 		context("The \"locationOfRoles\" JSON key has a value of: \"user.role\"", function() {
-			it('should error because \"locationOfRoles\" is invalid', function(done) {
+			it('should return 400 because \"locationOfRoles\" is invalid', function(done) {
 				ssarv(["admin", "mod"], {locationOfRoles: "user.role"})(req, res, function(err) {
 					
+					if(err) {
+						assert.equal(err.status, 400);
+						done();
+					} else {
+						done(new Error("Did not return an error."));
+					}
+				});
+				
+			})
+		})
+
+		context("The \"locationOfRoles\" JSON key has a value of: \"req.user.role\"", function() {
+			it('should return 400 because \"locationOfRoles\" is invalid', function(done) {
+				ssarv(["admin", "mod"], {locationOfRoles: "req.user.role"})(req, res, function(err) {
 					if(err) {
 						assert.equal(err.status, 400);
 						done();
@@ -215,3 +251,5 @@ describe("User in the \"req\" object has a role value of: \"admin\".", function(
 		})
 	})
 });
+
+

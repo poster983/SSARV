@@ -39,6 +39,9 @@ module.exports = function(requiredRoles, opt) {
         	}
         	if(opt.failureRedirect) {
                 res.redirect(opt.failureRedirect);
+                var err = new Error("Forbidden");
+                    err.status = 403;
+                return next(err);
             } else {
                 var err = new Error("Forbidden");
                     err.status = 403;
@@ -52,6 +55,9 @@ module.exports = function(requiredRoles, opt) {
             }
             if(opt.failureRedirect) {
                 res.redirect(opt.failureRedirect);
+                var err = new Error("Forbidden");
+                    err.status = 403;
+                return next(err);
             } else {
                 var err = new Error("Forbidden");
                     err.status = 403;
