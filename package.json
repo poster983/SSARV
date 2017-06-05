@@ -4,7 +4,8 @@
   "description": "Stupidly Simple Account Role Verifier - Express middleware that checks if the user has the correct permission role. Edit",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --reporter nyan"
+    "test": "mocha --reporter nyan",
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
     "chai": "^4.0.1",
     "mocha": "^3.4.2",
     "node-mocks-http": "^1.6.2",
-    "nyc": "^11.0.2"
+    "nyc": "^11.0.2",
+    "codecov": "^2.2.0"
   }
 }

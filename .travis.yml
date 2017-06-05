@@ -1,0 +1,11 @@
+sudo: true
+language: node_js
+# before_install:
+install:
+  - npm install --dev
+after_success: npm run coverage
+node_js:
+  - 'node'
+  - '6'
+  - '5'
+  - '4'
