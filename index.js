@@ -24,22 +24,54 @@ SOFTWARE.
 
 module.exports = function(requiredRoles, opt) {
   return function(req, res, next) {
-    var role = recursiveArray(opt.locationOfRoles.split("."), req);
+    recursiveArray(opt.locationOfRoles.split("."), req, function(err, role) {
+    if(err) {
+    	
+    	return next(err);
+    }
+    
+    
     if (Array.isArray(role)) {
     	for(x = 0; x < requiredRoles.length; x++) {
     		if (role.indexOf(requiredRoles[x]) != -1) {
-    			next();
-    		}
+    			return next();
+    		}    		
     	}
-	}
-    next()
+    	var err = new Error("Forbidden");
+    			err.status = 403;
+    			return next(err);
+	} else {
+        for(x = 0; x < requiredRoles.length; x++) {
+            if(requiredRoles[x] == role) {
+                return next();
+            }
+        }
+        var err = new Error("Forbidden");
+                err.status = 403;
+                return next(err);
+    }
+	});
   }
 }
 
-function recursiveArray(array, jsonObj) {
-	if(array.length < 1 ) return jsonObj;
-	jsonObj = jsonObj[array[0]];
-	return recursiveArray(array.slice(1), jsonObj);
+function recursiveArray(array, jsonObj, callback) {
+	if(array.length < 1 ) {
+        if(jsonObj == undefined) {
+            var err = new Error("BAD REQUEST: Nothing found at the JSON path");
+            err.status = 400;
+            return callback(err, jsonObj);
+        } else {
+            return callback(null, jsonObj);
+        }
+    }
+	try{
+		jsonObj = jsonObj[array[0]];
+	} catch(err) {
+		//var err = new Error(err)
+		err.status = 400;
+		return callback(err); 
+	} 
+	return recursiveArray(array.slice(1), jsonObj, callback);
 }
 
 /*
