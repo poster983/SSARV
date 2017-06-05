@@ -25,31 +25,39 @@ SOFTWARE.
 module.exports = function(requiredRoles, opt) {
   return function(req, res, next) {
     recursiveArray(opt.locationOfRoles.split("."), req, function(err, role) {
-    if(err) {
-    	
-    	return next(err);
-    }
-    
-    
-    if (Array.isArray(role)) {
-    	for(x = 0; x < requiredRoles.length; x++) {
-    		if (role.indexOf(requiredRoles[x]) != -1) {
-    			return next();
-    		}    		
-    	}
-    	var err = new Error("Forbidden");
-    			err.status = 403;
-    			return next(err);
-	} else {
-        for(x = 0; x < requiredRoles.length; x++) {
-            if(requiredRoles[x] == role) {
-                return next();
+        if(err) {
+        	
+        	return next(err);
+        }
+        
+        
+        if (Array.isArray(role)) {
+        	for(x = 0; x < requiredRoles.length; x++) {
+        		if (role.indexOf(requiredRoles[x]) != -1) {
+        			return next();
+        		}    		
+        	}
+        	if(opt.failureRedirect) {
+                res.redirect(opt.failureRedirect).status(403);
+            } else {
+                var err = new Error("Forbidden");
+                    err.status = 403;
+                    return next(err);
+            }
+    	} else {
+            for(x = 0; x < requiredRoles.length; x++) {
+                if(requiredRoles[x] == role) {
+                    return next();
+                }
+            }
+            if(opt.failureRedirect) {
+                res.redirect(opt.failureRedirect).status(403);
+            } else {
+                var err = new Error("Forbidden");
+                    err.status = 403;
+                    return next(err);
             }
         }
-        var err = new Error("Forbidden");
-                err.status = 403;
-                return next(err);
-    }
 	});
   }
 }

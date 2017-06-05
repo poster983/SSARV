@@ -10,7 +10,7 @@ For use with express.
 
 ### Syntex 
 
-`ssarv(requiredRoles, opt )
+`ssarv(requiredRoles, opt)`
 
 "requiredRoles" is an array of roles allowed
 

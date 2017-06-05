@@ -4,7 +4,7 @@
   "description": "Stupidly Simple Account Role Verifier - Express middleware that checks if the user has the correct permission role. Edit",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --reporter nyan"
   },
   "repository": {
     "type": "git",

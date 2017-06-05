@@ -6,6 +6,7 @@ var req = {}; // define REQUEST
 var res = {};// define RESPONSE
 
 
+
 function handleError(done, fn) {
     try { // boilerplate to be able to get the assert failures
         fn();
@@ -114,3 +115,103 @@ describe("User in the \"req\" object has a role value of: \"[\"admin\", \"mod\"]
 		})
 	})
 })
+
+describe("User in the \"req\" object has a role value of: \"admin\".", function() {
+	before(function(dones) {
+	    /* 
+	     * before each test, reset the REQUEST and RESPONSE variables 
+	     * to be send into the middle ware
+	    **/
+	    req = httpMocks.createRequest({
+	        method: 'GET',
+	        url: '/admin?myid=123456789',
+	        user: {
+	        	name: "Tester",
+	        	perm: {
+	            	role: ["admin", "mod"]
+	            }
+	        }
+	    });
+	    res = httpMocks.createResponse();
+	    
+	    dones(); // call done so that the next test can run
+	});
+
+	context("The required role array has a value of: \"[\"admin\", \"mod\"].\"", function() {
+		context("The \"locationOfRoles\" JSON key has a value of: \"user.perm.role\"", function() {
+			it('should return no error', function(done) {
+				ssarv(["admin", "mod"], {locationOfRoles: "user.perm.role"})(req, res, function(err) {
+					if(err) {
+						done(err);
+					} else {
+						done();
+					}
+				});
+				
+			})
+		})
+		context("The \"locationOfRoles\" JSON key has a value of: \"user.role\"", function() {
+			it('should error because \"locationOfRoles\" is invalid', function(done) {
+				ssarv(["admin", "mod"], {locationOfRoles: "user.role"})(req, res, function(err) {
+					
+					if(err) {
+						assert.equal(err.status, 400);
+						done();
+					} else {
+						done(new Error("Did not return an error."));
+					}
+				});
+				
+			})
+		})
+	})
+	//________
+	context("The required role array has a value of: \"[\"admin\", \"dev\"].\"", function() {
+		context("The \"locationOfRoles\" JSON key has a value of: \"user.perm.role\"", function() {
+			it('should return no error because the module uses OR logic', function(done) {
+				ssarv(["admin", "mod"], {locationOfRoles: "user.perm.role"})(req, res, function(err) {
+					if(err) {
+						done(err);
+					} else {
+						done();
+					}
+				});
+				
+			})
+		})
+	})
+
+	//______
+	context("The required role array has a value of: \"[\"mod\", \"admin\"].\"", function() {
+		context("The \"locationOfRoles\" JSON key has a value of: \"user.perm.role\"", function() {
+			it('should return no error because the module uses OR logic', function(done) {
+				ssarv(["mod", "admin"], {locationOfRoles: "user.perm.role"})(req, res, function(err) {
+					if(err) {
+						done(err);
+					} else {
+						done();
+					}
+				});
+				
+			})
+		})
+	})
+
+	//________
+
+	context("The required role array has a value of: \"[\"fail\", \"group\"].\"", function() {
+		context("The \"locationOfRoles\" JSON key has a value of: \"user.perm.role\"", function() {
+			it('should return 403 \"Forbidden\", because user does not have these roles', function(done) {
+				ssarv(["fail", "group"], {locationOfRoles: "user.perm.role"})(req, res, function(err) {
+					if(err) {
+						assert.equal(err.status, 403);
+						done();
+					} else {
+						done(new Error("Did not return an error."));
+					}
+				});
+				
+			})
+		})
+	})
+});
