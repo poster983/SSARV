@@ -1,6 +1,6 @@
 {
   "name": "ssarv",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Stupidly Simple Account Role Verifier - Express middleware that checks if the user has the correct permission role. Edit",
   "main": "index.js",
   "scripts": {

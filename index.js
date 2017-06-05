@@ -38,7 +38,7 @@ module.exports = function(requiredRoles, opt) {
         		}    		
         	}
         	if(opt.failureRedirect) {
-                res.redirect(opt.failureRedirect).status(403);
+                res.redirect(opt.failureRedirect);
             } else {
                 var err = new Error("Forbidden");
                     err.status = 403;
@@ -51,7 +51,7 @@ module.exports = function(requiredRoles, opt) {
                 }
             }
             if(opt.failureRedirect) {
-                res.redirect(opt.failureRedirect).status(403);
+                res.redirect(opt.failureRedirect);
             } else {
                 var err = new Error("Forbidden");
                     err.status = 403;
