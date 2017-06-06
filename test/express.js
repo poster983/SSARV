@@ -2,7 +2,7 @@ const express = require('express');
 ssarv = require('../index.js');
 const app = express()
 
-function includeUser(req, res, next) {
+function includeUserArray(req, res, next) {
 	req.user = {
 		perm: {
         	role: ["admin", "mod"]
@@ -11,11 +11,28 @@ function includeUser(req, res, next) {
 	next();
 }
 
-app.get('/shouldreturn200', includeUser, ssarv(["admin", "mod"], {locationOfRoles: "user.perm.role", failureRedirect: "/fail"}), function (req, res) {
+function includeUserString(req, res, next) {
+	req.user = {
+		perm: {
+        	role: "admin"
+        }
+	}
+	next();
+}
+
+app.get('/array/shouldreturn200', includeUserArray, ssarv(["admin", "mod"], {locationOfRoles: "user.perm.role", failureRedirect: "/fail"}), function (req, res) {
   res.sendStatus(200);
 });
 
-app.get('/shouldreturn403', includeUser, ssarv(["test", "fail"], {locationOfRoles: "user.perm.role", failureRedirect: "/fail"}), function (req, res) {
+app.get('/array/shouldreturn403', includeUserArray, ssarv(["test", "fail"], {locationOfRoles: "user.perm.role", failureRedirect: "/fail"}), function (req, res) {
+  res.sendStatus(200);
+});
+
+app.get('/string/shouldreturn200', includeUserString, ssarv(["admin", "mod"], {locationOfRoles: "user.perm.role", failureRedirect: "/fail"}), function (req, res) {
+  res.sendStatus(200);
+});
+
+app.get('/string/shouldreturn403', includeUserString, ssarv(["test", "fail"], {locationOfRoles: "user.perm.role", failureRedirect: "/fail"}), function (req, res) {
   res.sendStatus(200);
 });
 

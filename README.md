@@ -1,4 +1,6 @@
-# SSARV
+# SSARV  
+[![Build Status](https://travis-ci.org/poster983/SSARV.svg?branch=master)](https://travis-ci.org/poster983/SSARV) [![codecov](https://codecov.io/gh/poster983/SSARV/branch/master/graph/badge.svg)](https://codecov.io/gh/poster983/SSARV)  
+
 Stupidly Simple Account Role Verifier - Express middleware that checks if the user has the correct permission role.  
 
 ## Install

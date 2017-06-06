@@ -52,7 +52,7 @@ describe("Tests with express server", function() {
 			context("The \"locationOfRoles\" JSON key has a value of: \"user.perm.role\"", function() {
 				context("The required role array has a value of: \"[\"admin\", \"mod\"].\"", function() {
 					it("should return a 200", function(done) {
-						request.get('http://localhost:3333/shouldreturn200', function(error, response, body) {
+						request.get('http://localhost:3333/array/shouldreturn200', function(error, response, body) {
 							assert.equal(response.statusCode, 200);
 							done();
 						})
@@ -61,7 +61,30 @@ describe("Tests with express server", function() {
 
 				context("The required role array has a value of: \"[\"test\", \"fail\"].\"", function() {
 					it("should return a 403", function(done) {
-						request.get('http://localhost:3333/shouldreturn403', function(error, response, body) {
+						request.get('http://localhost:3333/array/shouldreturn403', function(error, response, body) {
+							assert.equal(response.statusCode, 403);
+							done();
+						})
+					})
+				});
+			});
+		});
+
+
+		describe("User in the \"req\" object has a role value of: \"admin\".", function() {
+			context("The \"locationOfRoles\" JSON key has a value of: \"user.perm.role\"", function() {
+				context("The required role array has a value of: \"[\"admin\", \"mod\"].\"", function() {
+					it("should return a 200", function(done) {
+						request.get('http://localhost:3333/string/shouldreturn200', function(error, response, body) {
+							assert.equal(response.statusCode, 200);
+							done();
+						})
+					})
+				});
+
+				context("The required role array has a value of: \"[\"test\", \"fail\"].\"", function() {
+					it("should return a 403", function(done) {
+						request.get('http://localhost:3333/string/shouldreturn403', function(error, response, body) {
 							assert.equal(response.statusCode, 403);
 							done();
 						})
