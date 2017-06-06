@@ -24,6 +24,20 @@ SOFTWARE.
 
 var ssarv = require('./index.js');
 var httpMocks = require('node-mocks-http');
+var server = require('./test/express.js');
+var request = require('request');
+request.get('http://localhost:3333/shouldreturn200', function(error, response, body) {
+							//assert.equal(response.statusCode, 200);
+							console.log(response.statusCode)
+							done();
+
+						})
+
+function done(err) {
+	server.close();
+}
+
+/*
 var req = {};
 var res = {};
 
@@ -33,13 +47,77 @@ req = httpMocks.createRequest({
 		        user: {
 		        	name: "Tester",
 		        	perm: {
-		            	role: ["admins", "mods"]
+		            	role: ["admin", "mod"]
 		            }
 		        }
 		    });
 		    res = httpMocks.createResponse();
 
-ssarv(["admin", "mod"], {locationOfRoles: "user.perm.role", failureRedirect: "/auth/login"})(req, res, function(err) {
-	console.log(err)
-	console.log(res);
-});
+
+console.log(tester());
+function tester(callback) {
+return ssarv(["admin", "mod"], {locationOfRoles: "user.perm.role", failureRedirect: "/auth/login"})(req, res, function(err) {
+	console.log("run")
+		if(err) {
+			return done(err);
+		} else {
+			return done("done");
+		}
+	});
+}
+
+function done(err) {
+	console.log("Resp:")
+	console.log(err);
+}
+
+		    /*
+var locDone = false;
+
+var syncFun = function(allowedRoles, opt, reqs, ress) {
+	ssarv(allowedRoles, opt)(req, res, function(err, resulting) {
+		if(err) {
+			return err;
+		}
+		console.log(resulting);
+		return resulting;
+	});
+};
+	/*
+	ssarv(["admin", "mod"], {locationOfRoles: "user.perm.role", failureRedirect: "/auth/login"})(req, res, function(err) {
+		if(err) {
+			return done(err);
+		}
+		return done(new Error("Redirect Failed"));
+	});*/
+/*
+	void sync([syncFun(["admins", "mods"], {locationOfRoles: "user.perm.role", failureRedirect: "/auth/login"}, reqs, ress)], function(a,b) {
+		console.log("ran");
+		console.log(a);
+		console.log(b)
+	})
+	*/
+/*
+
+function waiting() {
+	setTimeout(function() {
+		console.log("Hello");
+	}, 10000);
+};
+
+function call(a, b, callback) {
+	setTimeout(function() {
+		return callback(null, a+b);
+	}, 3000);
+}
+/*
+Sync(function() {
+	console.log("hello");
+
+	waiting.sync(null);
+
+	console.log(call.sync(null,1,2))
+}, function(err, result) {
+	if (err) console.error(err)
+		//console.log(result)
+});*/

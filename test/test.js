@@ -22,11 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 var ssarv = require('../index.js');
+var server = require('./express.js');
+var request = require('request');
 var httpMocks = require('node-mocks-http');
 var chai = require('chai');
 var assert = chai.assert;
 var req = {}; // define REQUEST
 var res = {};// define RESPONSE
+
+
 
 
 function handleError(done, fn) {
@@ -39,7 +43,34 @@ function handleError(done, fn) {
     }
 }
 
+describe("Tests with express server", function() {
+	after(function() {
+		server.close();
+	});
+	context("The \"failureRedirect\" option is set to redirect to \"/fail\"", function() {
+		describe("User in the \"req\" object has a role value of: \"[\"admin\", \"mod\"].\"", function() {
+			context("The \"locationOfRoles\" JSON key has a value of: \"user.perm.role\"", function() {
+				context("The required role array has a value of: \"[\"admin\", \"mod\"].\"", function() {
+					it("should return a 200", function(done) {
+						request.get('http://localhost:3333/shouldreturn200', function(error, response, body) {
+							assert.equal(response.statusCode, 200);
+							done();
+						})
+					})
+				});
 
+				context("The required role array has a value of: \"[\"test\", \"fail\"].\"", function() {
+					it("should return a 403", function(done) {
+						request.get('http://localhost:3333/shouldreturn403', function(error, response, body) {
+							assert.equal(response.statusCode, 403);
+							done();
+						})
+					})
+				});
+			});
+		});
+	});
+})
 
 
 describe("User in the \"req\" object has a role value of: \"[\"admin\", \"mod\"].\"", function() {
